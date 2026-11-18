@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Procedure {
+  id                 Int          @id @default(autoincrement())
+  name               String
+  raw_canvas_data    String
+  eplaner_ready_data String?
+  parent_id          Int?
+  created_at         DateTime     @default(now())
+  updated_at         DateTime     @updatedAt
+
+  parent             Procedure?   @relation("SubProcedures", fields: [parent_id], references: [id], onDelete: Cascade)
+  sub_procedures     Procedure[]  @relation("SubProcedures")
+
+  @@map("procedures")
+}
